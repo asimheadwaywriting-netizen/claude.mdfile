@@ -220,6 +220,7 @@ At end of each session, ask Claude: "Summarise the key decisions you made this s
 - [ ] tasks/lessons.md updated if any correction was made
 - [ ] tasks/decisions.md updated with key decisions from this session
 - [ ] Each milestone confirmed by user before the next one began
+- [ ] tasks/progress.md updated with completed milestones at session end
 
 ---
 
