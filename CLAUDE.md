@@ -9,6 +9,8 @@ n8n Skills: https://github.com/czlonkowski/n8n-skills
 ## Session Start (Do This First, Every Time)
 - Read tasks/lessons.md — if it doesn't exist, create it
 - Apply relevant lessons immediately before doing anything else
+- Read tasks/progress.md — if it doesn't exist, create it
+- If progress.md has entries, state the last completed milestone and ask: "Should I continue from here?"
 
 ---
 
