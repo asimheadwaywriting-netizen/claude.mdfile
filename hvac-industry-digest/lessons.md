@@ -9,6 +9,16 @@ Each entry: [Date] — [Lesson] — [Why it matters]
 
 <!-- Add as discovered, newest at top -->
 
+### 2026-05-23 — RSS Nodes Fail on Sites Without RSS Feeds (fixed)
+- **ALWAYS verify that a source URL is an actual RSS/Atom feed before using `rssFeedRead` node.** If the URL serves HTML (not XML with `<rss>` or `<feed>` tags), the node throws XML parsing errors (`Attribute without value`, `Invalid character in tag name`, `Unexpected close tag`).
+- **How to test:** `Invoke-WebRequest -Uri $url | Select-Object -Expand Content` and check for `<rss` or `<feed`. If not present, the URL is not an RSS feed.
+- **Fix pattern:** Replace `rssFeedRead` with `httpRequest` (GET, responseFormat=text) + a Code node that strips HTML and returns a single structured item `{title, link, pubDate, contentSnippet, feedSource}`.
+- **Affected sources:** housecallpro.com/resources, getjobber.com/academy, hvacinformed.com — none had public RSS feeds.
+
+### 2026-05-23 — Apify Body Not Sent (fixed)
+- **When patching an httpRequest node's credentials via API, always re-check `contentType` is set.** Patching credentials can leave `contentType` as empty string, causing n8n to send no `Content-Type` header — so Apify receives the POST body but can't parse it, returning `startUrls is required`.
+- **Fix:** Set `contentType: "raw"` and add `content-type: application/json` manual header on any httpRequest node sending a JSON body.
+
 ### 2026-05-23 — Claude Body Double-Encoding Bug (fixed)
 - **NEVER use `contentType: "json"` + `specifyBody: "string"` + `JSON.stringify()` together in an HTTP Request node.** n8n JSON-encodes the already-stringified string a second time, so Anthropic receives a JSON string literal instead of an object — causing `model: Field required`.
 - **Correct pattern:** Use `contentType: "raw"` + `specifyBody: "string"` + add `content-type: application/json` as a manual header. n8n sends the string body exactly as-is with no additional encoding.
