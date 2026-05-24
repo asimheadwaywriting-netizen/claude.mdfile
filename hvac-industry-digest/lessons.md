@@ -9,6 +9,10 @@ Each entry: [Date] — [Lesson] — [Why it matters]
 
 <!-- Add as discovered, newest at top -->
 
+### 2026-05-23 — Error Items Leak Through Filter Node (fixed)
+- **Always add `if (item.json.error !== undefined) continue;` as the FIRST guard in any filter/dedup Code node.** When upstream nodes have `continueOnFail: true`, failed items flow downstream as `{error: "..."}` objects. These have no `pubDate` (so they pass the age check) and no `link` (so they get a random dedup key and pass that check too) — meaning every error item survives the filter and pollutes Claude's input.
+- **Fallback also needs the guard:** `items.filter(i => !i.json.error).slice(0, 12)` — otherwise the fallback can return only error items when all real content is old.
+
 ### 2026-05-23 — RSS Nodes Fail on Sites Without RSS Feeds (fixed)
 - **ALWAYS verify that a source URL is an actual RSS/Atom feed before using `rssFeedRead` node.** If the URL serves HTML (not XML with `<rss>` or `<feed>` tags), the node throws XML parsing errors (`Attribute without value`, `Invalid character in tag name`, `Unexpected close tag`).
 - **How to test:** `Invoke-WebRequest -Uri $url | Select-Object -Expand Content` and check for `<rss` or `<feed`. If not present, the URL is not an RSS feed.
