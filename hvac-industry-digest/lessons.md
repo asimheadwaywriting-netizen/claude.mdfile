@@ -9,6 +9,11 @@ Each entry: [Date] — [Lesson] — [Why it matters]
 
 <!-- Add as discovered, newest at top -->
 
+### 2026-05-23 — API Patches Silently Lost on Re-Fetch (fixed)
+- **Never patch a workflow in multiple separate PUT calls.** Each PUT replaces the entire workflow. If you fetch → patch → push, then fetch again → patch → push, the second fetch gets the saved state from the first push — but if the first push missed nodes (e.g. parse nodes added in a prior session), the second push permanently drops them.
+- **Always do ONE comprehensive fetch → ALL mutations → ONE push.** Verify node count and key field values from the PUT response before trusting success.
+- **`Add-Member -Force` on nested PSCustomObjects does not always persist through `ConvertTo-Json`.** Use direct property assignment (`$node.parameters.jsCode = $code`) for existing properties. For new properties on nested objects, rebuild the entire sub-object as a fresh `[PSCustomObject]@{}`.
+
 ### 2026-05-23 — Error Items Leak Through Filter Node (fixed)
 - **Always add `if (item.json.error !== undefined) continue;` as the FIRST guard in any filter/dedup Code node.** When upstream nodes have `continueOnFail: true`, failed items flow downstream as `{error: "..."}` objects. These have no `pubDate` (so they pass the age check) and no `link` (so they get a random dedup key and pass that check too) — meaning every error item survives the filter and pollutes Claude's input.
 - **Fallback also needs the guard:** `items.filter(i => !i.json.error).slice(0, 12)` — otherwise the fallback can return only error items when all real content is old.
