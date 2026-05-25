@@ -9,6 +9,13 @@ Each entry: [Date] — [Lesson] — [Why it matters]
 
 <!-- Add as discovered, newest at top -->
 
+### 2026-05-25 — Firecrawl as Cloudflare Bypass for n8n (fixed)
+- **Use Firecrawl (`https://api.firecrawl.dev/v1/scrape`) for any Cloudflare-protected site in n8n.** It runs a real headless browser, solves Cloudflare JS challenges automatically, and returns clean markdown — no HTML parsing needed.
+- **Request pattern:** POST with `Authorization: Bearer YOUR_KEY` header and body `{"url":"https://target.com","formats":["markdown"]}`. Use `contentType: "raw"` (not `"json"`) to avoid double-encoding.
+- **Response shape:** `{success: true, data: {markdown: "...", metadata: {title, sourceURL}}}` — markdown goes straight to Claude, no further cleaning.
+- **Free tier:** 500 credits/month. Two sites every other day = ~30 scrapes/month, well within limit.
+- **Why not Apify Smart Article Extractor (`lukaskrivka~article-extractor-smart`):** The actor's input schema changed and now rejects calls with `contentType is required` — a schema-validation 400 error that can't be worked around without knowing the new required field name. Don't use this actor.
+
 ### 2026-05-25 — Cloudflare vs Basic UA Filter — Different Problems, Different Fixes
 - **Diagnose before you fix.** "Returns Cloudflare page" can mean two completely different things: (a) basic User-Agent filter — the site checks the UA string and blocks non-browser requests; or (b) genuine Cloudflare JS challenge — requires a real browser that executes JavaScript to solve the challenge.
 - **Test to tell them apart:** `Invoke-WebRequest -Uri $url -UserAgent "Mozilla/5.0 ..."` — if that returns real content, it's just a UA filter. If it still returns the Cloudflare challenge page, it's genuine Cloudflare.
