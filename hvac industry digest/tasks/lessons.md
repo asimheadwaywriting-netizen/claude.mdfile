@@ -9,6 +9,28 @@ Each entry: [Date] — [Lesson] — [Why it matters]
 
 <!-- Add as discovered, newest at top -->
 
+### 2026-05-25 — 3 Source Fixes + Rules to Remember
+
+**What we fixed:**
+
+**HouseCall Pro — 403 error**
+- Problem: n8n's HTTP Request node was being blocked because it didn't identify itself as a browser
+- Fix: Added a User-Agent header mimicking Chrome
+- Then: Switched to HTTP Request + XML node + Code node to parse the RSS into clean fields
+
+**Jobber Academy — "contentType is required" error**
+- Problem: Content Type field was set to text/html instead of application/json
+- Fix: Changed Content Type to application/json
+
+**HVAC Talk via Apify — same error**
+- Problem: Same Content Type mismatch
+- Fix: Same fix — change to application/json
+
+**Rules to remember:**
+- **Whenever you send JSON data to an API, always set Content Type to `application/json`** — not text/html, not raw
+- **Whenever n8n gets a 403 from a website, first suspect a missing User-Agent header** before assuming Cloudflare
+- **RSS feeds return XML** — always need an XML node before a Code node can read them
+
 ### 2026-05-25 — Firecrawl as Cloudflare Bypass for n8n (fixed)
 - **Use Firecrawl (`https://api.firecrawl.dev/v1/scrape`) for any Cloudflare-protected site in n8n.** It runs a real headless browser, solves Cloudflare JS challenges automatically, and returns clean markdown — no HTML parsing needed.
 - **Request pattern:** POST with `Authorization: Bearer YOUR_KEY` header and body `{"url":"https://target.com","formats":["markdown"]}`. Use `contentType: "raw"` (not `"json"`) to avoid double-encoding.
