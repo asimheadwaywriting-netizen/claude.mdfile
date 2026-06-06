@@ -6,6 +6,14 @@ n8n Skills: https://github.com/czlonkowski/n8n-skills
 
 ---
 
+## Agent
+For all n8n workflow building tasks, use the **n8n-builder** subagent (`~/.claude/agents/n8n-builder.md`).
+
+**Instance:** https://asim.sg-node8n.serverdoor.com
+**Credentials:** Gmail OAuth2, Google Sheets OAuth2 — use existing, never hardcode
+
+---
+
 ## Session Start (Do This First, Every Time)
 - Read tasks/lessons.md — if it doesn't exist, create it
 - Apply relevant lessons immediately before doing anything else
