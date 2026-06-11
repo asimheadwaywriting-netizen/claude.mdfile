@@ -100,6 +100,7 @@ Every production workflow must include:
 - Reference credentials by name as configured in the n8n UI credential store
 - For environment-specific secrets, use n8n Variables (`$vars.NAME`) at instance level
 - Flag any test credentials in the workflow description for replacement before production
+- **Anthropic/Claude nodes:** use credential **"Anthropic account 3"** (`Ew8le0xtB1KvwHFJ`, type `anthropicApi`) with `authentication: "predefinedCredentialType"` + `nodeCredentialType: "anthropicApi"`
 
 ---
 
